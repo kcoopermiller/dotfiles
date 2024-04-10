@@ -82,7 +82,7 @@
   services.printing.enable = true; 
 
   # Hardware
-  boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+  # boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]; 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
   };
@@ -98,7 +98,7 @@
       finegrained = false;
     };
     nvidiaSettings = true;
-    open = false;
+    open = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   services.xserver.videoDrivers = ["nvidia"];
