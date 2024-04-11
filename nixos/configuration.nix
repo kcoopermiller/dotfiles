@@ -82,7 +82,7 @@
   services.printing.enable = true; 
 
   # Hardware
-  # boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]; 
+  boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]; 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
   };
@@ -126,6 +126,8 @@
   fonts = {
     packages = with pkgs; [
       # nerdfonts
+      noto-fonts
+      noto-fonts-extra
       (nerdfonts.override {fonts = ["FiraCode"];})
     ];
     enableDefaultPackages = false;
