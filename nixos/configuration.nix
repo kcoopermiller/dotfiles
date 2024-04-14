@@ -82,10 +82,6 @@
   services.printing.enable = true; 
 
   # Hardware
-  boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ]; 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-  };
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -94,14 +90,18 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement = {
-      enable = true;
+      enable = false;
       finegrained = false;
     };
     nvidiaSettings = true;
-    open = true;
+    open = false;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+  }; 
+  services.xserver = {
+    enable = true;
+    videoDrivers = ["nvidia"];
+    windowManager.qtile.enable = true;
   };
-  services.xserver.videoDrivers = ["nvidia"];
   
   # Garbage Collector
   nix.gc = {

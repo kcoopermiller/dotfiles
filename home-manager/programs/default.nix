@@ -1,6 +1,6 @@
 {
   imports = [
-    ./hypr
+    # ./hypr
     # ./kitty
     ./starship
     # ./obsidian

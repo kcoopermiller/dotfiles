@@ -7,7 +7,7 @@
 }: {
   # You can import other home-manager modules here
   imports = [
-    inputs.hyprland.homeManagerModules.default
+    # inputs.hyprland.homeManagerModules.default
     ./programs
   ];
 
