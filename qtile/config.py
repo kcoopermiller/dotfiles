@@ -1,69 +1,11 @@
-from libqtile import backend, bar, layout, widget, qtile, hook
+from libqtile import bar, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
-from qtile_extras import widget
-from qtile_extras.widget.decorations import PowerLineDecoration
-
-import os
-import subprocess
-
-from colors import gruv_mat
-from colors import gruvbox
-
 mod = "mod4"
-
-arrow_powerlineRight = {
-    "decorations": [
-        PowerLineDecoration(
-            path="arrow_right",
-            size=11,
-        )
-    ]
-}
-arrow_powerlineLeft = {
-    "decorations": [
-        PowerLineDecoration(
-            path="arrow_left",
-            size=11,
-        )
-    ]
-}
-rounded_powerlineRight = {
-    "decorations": [
-        PowerLineDecoration(
-            path="rounded_right",
-            size=11,
-        )
-    ]
-}
-rounded_powerlineLeft = {
-    "decorations": [
-        PowerLineDecoration(
-            path="rouded_left",
-            size=11,
-        )
-    ]
-}
-slash_powerlineRight = {
-    "decorations": [
-        PowerLineDecoration(
-            path="forward_slash",
-            size=11,
-        )
-    ]
-}
-slash_powerlineLeft = {
-    "decorations": [
-        PowerLineDecoration(
-            path="back_slash",
-            size=11,
-        )
-    ]
-}
 terminal = guess_terminal()
-menu = "rofi -show drun -disable-history -show-icons"
+menu = "rofi -show drun -show-icons"
 browser = "firefox"
 
 keys = [
@@ -98,13 +40,12 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    # Applications
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "space", lazy.spawn(menu), desc="Launch menu"),
-    Key([mod], "b", lazy.spawn(menu), desc="Launch browser"),
+    Key([mod], "b", lazy.spawn(browser), desc="Launch browser"), 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key(
         [mod],
         "f",
@@ -117,220 +58,99 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 ]
 
-groups = [
-    Group(
-        "1",
-        matches=[Match(wm_class="kitty")],
-        layout="columns",
-    ),
-    Group(
-        "2",
-        matches=[Match(wm_class="firefox")],
-        layout="columns",
+# Add key bindings to switch VTs in Wayland.
+# We can't check qtile.core.name in default config as it is loaded before qtile is started
+# We therefore defer the check until the key binding is run by using .when(func=...)
+for vt in range(1, 8):
+    keys.append(
+        Key(
+            ["control", "mod1"],
+            f"f{vt}",
+            lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
+            desc=f"Switch to VT{vt}",
+        )
     )
-]
+
+
+groups = [Group(i) for i in "123456789"]
 
 for i in groups:
     keys.extend(
         [
-            # mod1 + letter of group = switch to group
+            # mod + group number = switch to group
             Key(
                 [mod],
                 i.name,
                 lazy.group[i.name].toscreen(),
                 desc="Switch to group {}".format(i.name),
             ),
-            # mod1 + shift + letter of group = move focused window to group
+            # mod + shift + group number = switch to & move focused window to group
             Key(
                 [mod, "shift"],
                 i.name,
-                lazy.window.togroup(i.name),
-                desc="move focused window to group {}".format(i.name),
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Switch to & move focused window to group {}".format(i.name),
             ),
+            # Or, use below if you prefer not to switch to that group.
+            # # mod + shift + group number = move focused window to group
+            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
+            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
-
 layouts = [
-    layout.Columns(
-        num_columns=2,
-        border_width=2,
-        margin=4,
-        wrap_focus_columns=False,
-        wrap_focus_rows=False,
-        border_focus=gruv_mat["grey"],
-        border_normal=gruv_mat["dark"],
-    ),
-    layout.Max(
-        border_width=2,
-        margin=6,
-        border_focus=gruv_mat["grey"],
-        border_normal=gruv_mat["dark"],
-    ),
+    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
+    layout.Max(),
+    # Try more layouts by unleashing below layouts.
+    # layout.Stack(num_stacks=2),
+    # layout.Bsp(),
+    # layout.Matrix(),
+    # layout.MonadTall(),
+    # layout.MonadWide(),
+    # layout.RatioTile(),
+    # layout.Tile(),
+    # layout.TreeTab(),
+    # layout.VerticalTile(),
+    # layout.Zoomy(),
 ]
 
-floating_layout = layout.Floating(
-    border_width=2,
-    border_focus=gruv_mat["grey"],
-    border_normal=gruv_mat["dark"],
-    float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
-        *layout.Floating.default_float_rules,
-        Match(wm_class="confirmreset"),  # gitk
-        Match(wm_class="confirm"),  # gitk
-        Match(wm_class="makebranch"),  # gitk
-        Match(wm_class="maketag"),  # gitk
-        Match(wm_class="ssh-askpass"),  # ssh-askpass
-        Match(wm_class="pavucontrol"),
-        Match(wm_class="dialog"),
-        Match(wm_class="error"),
-        Match(wm_class="file_progress"),
-        Match(wm_class="notification"),
-        Match(wm_class="splash"),
-        Match(wm_class="toolbar"),
-        Match(wm_class="download"),
-        Match(title="branchdialog"),  # gitk
-        Match(title="pinentry"),  # GPG key password entry
-    ],
-)
-
-########################################
-######### BAR AND WIDGETS ##############
-########################################
-
-########### MOUSE CALL BACKS ###########
-
-
-def open_rofi():
-    qtile.cmd_spawn(app_launcher)
-
-
-######### DEFAULT WIDGET SETTINGS ######
-
 widget_defaults = dict(
-    font="FiraCode Nerd Font",
-    fontsize=14,
+    font="sans",
+    fontsize=12,
     padding=3,
-    foreground=gruv_mat["white"],
 )
 extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        top=bar.Bar(
+        bottom=bar.Bar(
             [
-                #########################
-                # Widget Configurations #
-                #########################
-                widget.Image(
-                    filename="~/.config/qtile/imgs/arch.png",
-                    mouse_callbacks={"Button1": open_rofi},
-                    background=gruvbox["yellow"],
-                    margin=3,
+                widget.CurrentLayout(),
+                widget.GroupBox(),
+                widget.Prompt(),
+                widget.WindowName(),
+                widget.Chord(
+                    chords_colors={
+                        "launch": ("#ff0000", "#ffffff"),
+                    },
+                    name_transform=lambda name: name.upper(),
                 ),
-                widget.Spacer(
-                    length=1,
-                    background=gruvbox["yellow"],
-                    **arrow_powerlineLeft,
-                ),
-                widget.GroupBox(
-                    font="FiraCode Nerd Font Mono",
-                    fontsize=27,
-                    padding_x=3,
-                    padding_y=5,
-                    rounded=False,
-                    center_aligned=True,
-                    disable_drag=True,
-                    borderwidth=3,
-                    highlight_method="line",
-                    active=gruvbox["cream"],
-                    inactive=gruvbox["blue-alt"],
-                    highlight_color=gruvbox["dark-grey"],
-                    this_current_screen_border=gruvbox["yellow"],
-                    this_screen_border=gruv_mat["disabled"],
-                    other_screen_border=gruv_mat["red"],
-                    other_current_screen_border=gruv_mat["red"],
-                    background=gruvbox["dark-grey"],
-                    foreground=gruv_mat["disabled"],
-                    **arrow_powerlineLeft,
-                ),
-                widget.TaskList(
-                    margin=0,
-                    padding=6,
-                    icon_size=0,
-                    fontsize=14,
-                    borderwidth=1,
-                    rounded=False,
-                    highlight_method="block",
-                    title_width_method="uniform",
-                    urgent_alert_methond="border",
-                    foreground=gruv_mat["black"],
-                    background=gruvbox["cream"],
-                    border=gruvbox["cream"],
-                    urgent_border=gruv_mat["red-alt"],
-                    txt_floating=" ",
-                    txt_maximized=" ",
-                    txt_minimized=" ",
-                ),
-                widget.Spacer(
-                    length=1,
-                    background=gruvbox["cream"],
-                    **rounded_powerlineRight,
-                ),
-                widget.CPU(
-                    padding=5,
-                    format="  {freq_current}GHz {load_percent}%",
-                    foreground=gruvbox["cream"],
-                    background=gruvbox["dark-grey"],
-                    **slash_powerlineRight,
-                ),
-                widget.ThermalSensor(
-                    padding=5,
-                    update_interval=1,
-                    format="󰔐 {temp:.0f}{unit}",
-                    tag_sensor="Tctl",
-                    foreground=gruvbox["cream"],
-                    background=gruvbox["blue-alt"],
-                    **slash_powerlineRight,
-                ),
-                widget.Memory(
-                    padding=5,
-                    format="󰈀 {MemUsed:.0f}{mm}",
-                    background=gruvbox["cream"],
-                    foreground=gruvbox["dark-grey"],
-                    **slash_powerlineRight,
-                ),
-                widget.Clock(
-                    padding=5,
-                    format="  %a %d %b %H:%M:%S",
-                    foreground=gruvbox["yellow"],
-                    background=gruvbox["dark-grey"],
-                    **slash_powerlineRight,
-                ),
-                widget.PulseVolume(
-                    fmt="󰕾 {}",
-                    foreground=gruvbox["dark"],
-                    background=gruvbox["yellow"],
-                    padding=10,
-                    **slash_powerlineRight,
-                ),
-                widget.Systray(
-                    padding=7,
-                    icon_size=15,
-                ),
-                widget.CurrentLayoutIcon(
-                    padding=5,
-                    scale=0.5,
-                ),
+                widget.TextBox("default config", name="default"),
+                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
+                # widget.StatusNotifier(),
+                widget.Systray(),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+                widget.QuickExit(),
             ],
-            ######################
-            # BAR CONGIGURATIONS #
-            ######################
-            30,
-            margin=[6, 10, 6, 10],
-            border_width=[0, 0, 0, 0],
-            background=gruv_mat["dark"],
+            24,
+            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
+            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
+        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
+        # By default we handle these events delayed to already improve performance, however your system might still be struggling
+        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
+        # x11_drag_polling_rate = 60,
     ),
 ]
 
@@ -347,6 +167,18 @@ follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
 cursor_warp = False
+floating_layout = layout.Floating(
+    float_rules=[
+        # Run the utility of `xprop` to see the wm class and name of an X client.
+        *layout.Floating.default_float_rules,
+        Match(wm_class="confirmreset"),  # gitk
+        Match(wm_class="makebranch"),  # gitk
+        Match(wm_class="maketag"),  # gitk
+        Match(wm_class="ssh-askpass"),  # ssh-askpass
+        Match(title="branchdialog"),  # gitk
+        Match(title="pinentry"),  # GPG key password entry
+    ]
+)
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 reconfigure_screens = True
