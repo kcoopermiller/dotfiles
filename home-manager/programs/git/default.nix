@@ -2,8 +2,12 @@
 
 {
   programs.git = {
-    enable = true;îB
-    userName = "Cooper Miller";
-    userEmail = "kcoopermiller9@gmail.com";
+    enable = true;
+    lfs.enable = true;
+    extraConfig = {
+      credential.helper = "${
+          pkgs.git.override { withLibsecret = true; }
+        }/bin/git-credential-libsecret";
+    };
   };
 }
