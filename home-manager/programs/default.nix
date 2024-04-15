@@ -1,11 +1,10 @@
 {
   imports = [
-    # ./hypr
-    # ./kitty
+    ./kitty
     ./starship
     # ./obsidian
     # ./neofetch
-    # ./rofi
+    ./rofi
     ./firefox
     ./zsh
   ];

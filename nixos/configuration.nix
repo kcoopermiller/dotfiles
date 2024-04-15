@@ -67,6 +67,16 @@
   
   # Programs
   programs.zsh.enable = true;
+  
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
+  
+  environment.systemPackages = with pkgs; [
+    lm_sensors
+  ];
 
   # Configure your system-wide user settings
   users.users = {
@@ -79,7 +89,7 @@
   };
  
   # Enable CUPS to print documents
-  services.printing.enable = true; 
+  # services.printing.enable = true; 
 
   # Hardware
   hardware.opengl = {
@@ -103,11 +113,13 @@
     windowManager.qtile.enable = true;
   };
   
+  # Limit the number of generations to keep
+  boot.loader.systemd-boot.configurationLimit = 10;
   # Garbage Collector
   nix.gc = {
     automatic = true;
     dates = "weekly";
-    options = "--delete older than 7d";
+    options = "--delete-older-than 1w";
   };
 
   # Enable sound with pipewire
@@ -120,22 +132,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # jack.enable = true;
-  };
-
-  # Fonts
-  fonts = {
-    packages = with pkgs; [
-      # nerdfonts
-      noto-fonts
-      noto-fonts-extra
-      (nerdfonts.override {fonts = ["FiraCode"];})
-    ];
-    enableDefaultPackages = false;
-    fontconfig.defaultFonts = {
-      serif = ["FiraCode Nerd Font"];
-      sansSerif = ["FiraCode Nerd Font"];
-      monospace = ["FiraCode Nerd Font"];
-    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

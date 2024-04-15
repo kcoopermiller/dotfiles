@@ -3,6 +3,9 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
+from colors import gruv_mat
+from colors import gruvbox
+
 mod = "mod4"
 terminal = guess_terminal()
 menu = "rofi -show drun -show-icons"
@@ -45,7 +48,7 @@ keys = [
     Key([mod], "b", lazy.spawn(browser), desc="Launch browser"), 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "c", lazy.window.kill(), desc="Kill focused window"),
     Key(
         [mod],
         "f",
@@ -99,19 +102,21 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
-    layout.Max(),
-    # Try more layouts by unleashing below layouts.
-    # layout.Stack(num_stacks=2),
-    # layout.Bsp(),
-    # layout.Matrix(),
-    # layout.MonadTall(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.TreeTab(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
+    layout.Columns(
+        num_columns=2,
+        border_width=2,
+        margin=4,
+        wrap_focus_columns=False,
+        wrap_focus_rows=False,
+        border_focus=gruv_mat["grey"],
+        border_normal=gruv_mat["dark"],
+    ),
+    layout.Max(
+        border_width=2,
+        margin=6,
+        border_focus=gruv_mat["grey"],
+        border_normal=gruv_mat["dark"],
+    ),
 ]
 
 widget_defaults = dict(
@@ -123,6 +128,8 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
+        wallpaper='../home-manager/wallpapers/azurlane.jpg',
+        wallpaper_mode='fill',
         bottom=bar.Bar(
             [
                 widget.CurrentLayout(),
