@@ -7,5 +7,6 @@
     ./rofi
     ./firefox
     ./zsh
+    ./vscode
   ];
 }

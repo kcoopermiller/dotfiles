@@ -128,7 +128,7 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        wallpaper='../home-manager/wallpapers/azurlane.jpg',
+        wallpaper='~/.config/home-manager/wallpapers/azurlane.jpg',
         wallpaper_mode='fill',
         bottom=bar.Bar(
             [
