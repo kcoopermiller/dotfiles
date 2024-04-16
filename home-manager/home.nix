@@ -18,9 +18,7 @@
 
   home.packages = with pkgs; [
     vim
-    git
     neofetch
-    kitty
     obsidian
     rofi
     discord
