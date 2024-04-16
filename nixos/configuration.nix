@@ -84,6 +84,9 @@
       isNormalUser = true;
       description = "Cooper Miller";
       shell = pkgs.zsh;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1WP54t2FILlhBFVZnw6a6dAlpv1l4oHL7yvgy2FOxl kcoopermiller9@gmail.com"
+      ];
       extraGroups = ["networkmanager" "wheel"];
     };
   };
@@ -132,6 +135,16 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # jack.enable = true;
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      # Forbid root login through SSH.
+      PermitRootLogin = "no";
+      # Use keys only.
+      PasswordAuthentication = false;
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
