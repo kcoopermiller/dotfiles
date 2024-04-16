@@ -74,6 +74,7 @@
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
   
+  # Packages
   environment.systemPackages = with pkgs; [
     lm_sensors
   ];
@@ -87,12 +88,18 @@
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC1WP54t2FILlhBFVZnw6a6dAlpv1l4oHL7yvgy2FOxl kcoopermiller9@gmail.com"
       ];
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "wheel" "docker"];
     };
   };
  
   # Enable CUPS to print documents
   # services.printing.enable = true; 
+
+  # Enable Docker
+  virtualisation.docker = {
+    enable = true;
+    enableNvidia = true;
+  };
 
   # Hardware
   hardware.opengl = {
