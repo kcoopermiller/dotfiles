@@ -5,3 +5,5 @@
 | Shell         | [Zsh](https://www.zsh.org/) + [Starship](https://github.com/starship/starship)                 |
 | Text Editors  | [Cursor](https://cursor.sh/)                      |
 | Menu          | [Rofi](https://github.com/lbonn/rofi)                                                          |
+| System Monitor| [Conky](https://github.com/brndnmtthws/conky)                                        |
+
