@@ -17,7 +17,6 @@
   };
 
   home.packages = with pkgs; [
-    vim
     neofetch
     obsidian
     rofi
