@@ -4,7 +4,7 @@
     ./kitty
     ./starship
     # ./obsidian
-    # ./neofetch
+    ./neofetch
     ./rofi
     ./firefox
     ./zsh
