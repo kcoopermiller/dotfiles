@@ -94,10 +94,6 @@ for i in groups:
                 lazy.window.togroup(i.name, switch_group=True),
                 desc="Switch to & move focused window to group {}".format(i.name),
             ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod + shift + group number = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
@@ -130,34 +126,56 @@ screens = [
     Screen(
         wallpaper='~/.config/home-manager/wallpapers/azurlane.jpg',
         wallpaper_mode='fill',
-        bottom=bar.Bar(
+        top=bar.Bar(
             [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
+                widget.GroupBox(
+                    padding_x=3,
+                    padding_y=5,
+                    disable_drag=True,
+                    center_aligned=True,
+                    highlight_method="line",
+                    highlight_color=gruvbox["dark-grey"],
+                    active=gruvbox["cream"],
+                    foreground=gruv_mat["disabled"],
+                    background=gruvbox["dark-grey"],
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
+                widget.Spacer(
+                    length=bar.STRETCH,
+                    background=gruvbox["dark-grey"],
+                ),
+                widget.NvidiaSensors(
+                    padding=5,
+                    update_interval=1,
+                    format='{temp}°C',
+                    foreground=gruvbox["cream"],
+                    background=gruvbox["dark-grey"],
+                ),
+                widget.ThermalSensor(
+                    padding=5,
+                    update_interval=1,
+                    format='{tag}: {temp:.0f}{unit}',
+                    foreground=gruvbox["cream"],
+                    background=gruvbox["dark-grey"],
+                ),
+                widget.Memory(
+                    padding=5,
+                    foreground=gruvbox["cream"],
+                    background=gruvbox["dark-grey"],
+                    measure_mem='G',
+                ),
                 widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
+                widget.Clock(
+                    padding=5,
+                    format="%Y-%m-%d %a %I:%M %p",
+                    foreground=gruvbox["cream"],
+                    background=gruvbox["dark-grey"],
+                ),
             ],
-            24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
+            30,
+            margin=[4, 4, 4, 4],
+            border_width=[0, 0, 0, 0],
+            background=gruv_mat["dark"],
         ),
-        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-        # By default we handle these events delayed to already improve performance, however your system might still be struggling
-        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-        # x11_drag_polling_rate = 60,
     ),
 ]
 

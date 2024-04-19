@@ -121,7 +121,13 @@
   services.xserver = {
     enable = true;
     videoDrivers = ["nvidia"];
-    windowManager.qtile.enable = true;
+    windowManager.qtile = {
+      enable = true;
+      extraPackages = python3Packages: with python3Packages; [
+        qtile-extras
+        psutil
+      ];
+    };
   };
   
   # Limit the number of generations to keep
