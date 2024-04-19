@@ -146,13 +146,14 @@ screens = [
                 widget.NvidiaSensors(
                     padding=5,
                     update_interval=1,
-                    format='{temp}°C',
+                    format='GPU: {temp}°C',
                     foreground=gruvbox["cream"],
                     background=gruvbox["dark-grey"],
                 ),
                 widget.ThermalSensor(
                     padding=5,
                     update_interval=1,
+                    tag_sensor="Tctl",
                     format='{tag}: {temp:.0f}{unit}',
                     foreground=gruvbox["cream"],
                     background=gruvbox["dark-grey"],
