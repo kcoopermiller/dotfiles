@@ -44,12 +44,15 @@
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+   
+  # Kernel Packages / Modules
+  boot.kernelModules = [ "nct6775" ];
   
   # Enable networking
   networking.networkmanager.enable = true;
 
   # Time zone
-  time.timeZone = "America/New_York";
+  time.timeZone = "America/Chicago";
 
   # Select internationalization properties
   i18n.defaultLocale = "en_US.UTF-8";
@@ -66,6 +69,11 @@
   };
   
   # Programs
+  programs.coolercontrol = {
+    enable = true;
+    nvidiaSupport = true;
+  };
+
   programs.zsh.enable = true;
   
   programs.steam = {

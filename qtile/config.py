@@ -124,7 +124,7 @@ extension_defaults = widget_defaults.copy()
 
 screens = [
     Screen(
-        wallpaper='~/.config/home-manager/wallpapers/azurlane.jpg',
+        wallpaper='~/.config/qtile/wallpapers/summer.jpg',
         wallpaper_mode='fill',
         top=bar.Bar(
             [

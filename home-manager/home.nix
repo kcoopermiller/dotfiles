@@ -16,11 +16,16 @@
     homeDirectory = "/home/cooper";
   };
 
+  fonts.fontconfig.enable = true;        
+
   home.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     neofetch
     obsidian
     rofi
     discord
+    nix-index
+    simplescreenrecorder
   ];
 
   # Nicely reload system units when changing configs
