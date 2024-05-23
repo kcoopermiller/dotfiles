@@ -8,6 +8,8 @@
 
 ## Install
 ```bash
-sudo mv /etc/nixos /etc/nixos.bak # backup og config
-sudo nixos-rebuild switch --flake github:kcoopermiller/dotfiles#nixos # deploy flake.nix in current directory
+# backup og config
+sudo mv /etc/nixos /etc/nixos.bak
+# deploy flake.nix in current directory
+sudo nixos-rebuild switch --flake github:kcoopermiller/dotfiles#nixos
 ```
