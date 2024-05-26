@@ -8,6 +8,7 @@
     ./firefox
     ./zsh
     ./vscode
+    ./vencord
     ./zathura
   ];
 }

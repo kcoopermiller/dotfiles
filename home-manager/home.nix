@@ -23,7 +23,7 @@
     neofetch
     obsidian
     rofi
-    discord
+    vesktop
     nix-index
     simplescreenrecorder
   ];
