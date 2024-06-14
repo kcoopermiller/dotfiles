@@ -1,14 +1,14 @@
 {
   imports = [
+    ./firefox
     ./git
     ./kitty
-    ./starship
     ./neofetch
     ./rofi
-    ./firefox
-    ./zsh
-    ./vscode
+    ./starship
     ./vencord
+    ./vscode
     ./zathura
+    ./zsh
   ];
 }

@@ -110,7 +110,7 @@
     enableNvidia = true;
   };
 
-  # Hardware
+  # Graphics
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -148,7 +148,6 @@
   };
 
   # Enable sound with pipewire
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -156,7 +155,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # jack.enable = true;
   };
 
   services.openssh = {
