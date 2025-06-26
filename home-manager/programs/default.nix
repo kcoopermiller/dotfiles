@@ -4,6 +4,7 @@
     ./git
     ./kitty
     ./neofetch
+    ./ripgrep
     ./rofi
     ./starship
     ./vencord
