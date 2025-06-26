@@ -1,9 +1,11 @@
 {
   imports = [
+    ./eza
     ./firefox
     ./git
     ./kitty
     ./neofetch
+    ./neovim
     ./rofi
     ./starship
     ./vencord
